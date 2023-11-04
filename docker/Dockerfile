@@ -37,10 +37,19 @@ RUN wget https://github.com/nginx/nginx/raw/master/conf/mime.types
 RUN cp mime.types /etc/nginx/mime.types
 COPY site_stocks /etc/nginx/sites-available/default
 
-RUN apt install -y vim
+RUN apt install -y vim curl
 
 COPY vimrc /root/.vimrc
 COPY vimrc /root/.gdbinit
+
+#SHELL ["/bin/bash", "-c"]
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | /bin/bash
+#RUN source ~/.bashrc
+#RUN source /root/.nvm/nvm.sh
+#RUN nvm install v16.14.0
+ENV NVM_DIR=/root/.nvm
+ENV NODE_VERSION=v16.14.0
+RUN . $HOME/.nvm/nvm.sh && nvm install $NODE_VERSION
 
 #RUN git config --global user.name ""
 #RUN git config --global user.email ""
