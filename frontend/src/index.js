@@ -10,7 +10,7 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/frontend" element={<App />}>
+        <Route path="/static" element={<App />}>
         </Route>
       </Routes>
     </BrowserRouter>
