@@ -1,0 +1,2 @@
+cd /srv/server_test_01
+go run main

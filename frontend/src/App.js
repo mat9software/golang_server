@@ -1,6 +1,24 @@
 import logo from './logo.svg';
 import './App.css';
 
+function testButton() {
+  fetch("/backend/signin", {
+    method: "post",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+
+    body: JSON.stringify({
+      username: "user1",
+      password: "password1"
+    })
+  })
+  .then( (response) => { 
+      console.log(response)
+  });
+}
+
 function App() {
   return (
     <div className="App">
@@ -17,6 +35,9 @@ function App() {
         >
           Learn React
         </a>
+        <button onClick={testButton}>
+          Login!!!!
+        </button>
       </header>
     </div>
   );

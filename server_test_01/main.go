@@ -8,20 +8,21 @@ import (
 )
 
 func main() {
-
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, r.URL.Path[1:])
+		log.Print("DEBUG:default handle")
+		fmt.Fprintf(w, "Hi /")
 	})
 
-	http.HandleFunc("/hi", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hi")
-	})
+	http.HandleFunc("/signin", Signin)
+	http.HandleFunc("/welcome", Welcome)
+	http.HandleFunc("/refresh", Refresh)
+	http.HandleFunc("/logout", Logout)
+
 	httpPort := os.Getenv("PORT")
 	if httpPort == "" {
-		httpPort = "80"
+		httpPort = "8080"
 	}
 
 	log.Print("Listening on port " + httpPort)
-	log.Fatal(http.ListenAndServe(":"+httpPort, nil))
-
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }

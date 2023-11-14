@@ -1,1 +1,1 @@
-docker run -p 80:80 -v `pwd`:/srv -w /srv -ti ubuntu_go
+docker run -p 3000:3000 -p 8080:8080 -p 80:80 -v `pwd`:/srv -w /srv -ti ubuntu_go
