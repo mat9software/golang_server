@@ -52,7 +52,7 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sessionToken := uuid.NewString()
-	expiresAt := time.Now().Add(120 * time.Second)
+	expiresAt := time.Now().Add(100 * time.Hour)
 
 	sessions[sessionToken] = session{
 		username: creds.Username,
@@ -60,10 +60,15 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.SetCookie(w, &http.Cookie{
-		Name:    "session_token",
-		Value:   sessionToken,
+  Name:    "session_token",
+  Value:   sessionToken,
 		Expires: expiresAt,
+  HttpOnly: true,
 	})
+
+//mdtmp remove
+ w.Write([]byte("cookie set"))
+
 }
 
 func Welcome(w http.ResponseWriter, r *http.Request) {

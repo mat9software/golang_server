@@ -1,17 +1,19 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
 	"log"
 	"net/http"
 	"os"
 )
 
 func main() {
+/*
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		log.Print("DEBUG:default handle")
 		fmt.Fprintf(w, "Hi /")
 	})
+*/
 
 	http.HandleFunc("/signin", Signin)
 	http.HandleFunc("/welcome", Welcome)

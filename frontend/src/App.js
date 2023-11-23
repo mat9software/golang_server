@@ -1,7 +1,29 @@
 import logo from './logo.svg';
 import './App.css';
 
-function testButton() {
+async function testButton() {
+  const response = await fetch("/backend/signin", {
+    method: "post",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+
+    body: JSON.stringify({
+      username: "user1",
+      password: "password1"
+    })
+  })
+
+  console.log(response);
+  const text = await response.text();
+  console.log(text);
+  //const raw = response.headers.raw()['set-cookie'];
+  //console.log(raw);
+  const raw = response.headers
+  console.log(raw);
+
+/*
   fetch("/backend/signin", {
     method: "post",
     headers: {
@@ -16,7 +38,9 @@ function testButton() {
   })
   .then( (response) => { 
       console.log(response)
+      console.log(response.text)
   });
+*/
 }
 
 function App() {
@@ -27,14 +51,6 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
         <button onClick={testButton}>
           Login!!!!
         </button>
