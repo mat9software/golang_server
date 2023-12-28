@@ -17,14 +17,14 @@ var users = map[string]string{
 }
 
 // --------------------------
-type session struct {
+type Session struct {
 	username string
 	expiry   time.Time
 }
 
-var sessions = map[string]session{}
+var sessions = map[string]Session{}
 
-func (s session) isExpired() bool {
+func (s Session) isExpired() bool {
 	return s.expiry.Before(time.Now())
 }
 
@@ -54,7 +54,7 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 	sessionToken := uuid.NewString()
 	expiresAt := time.Now().Add(100 * time.Hour)
 
-	sessions[sessionToken] = session{
+	sessions[sessionToken] = Session{
 		username: creds.Username,
 		expiry:   expiresAt,
 	}
@@ -64,6 +64,7 @@ func Signin(w http.ResponseWriter, r *http.Request) {
   Value:   sessionToken,
 		Expires: expiresAt,
   HttpOnly: true,
+  Path : "/",
 	})
 
 //mdtmp remove
@@ -127,7 +128,7 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 	newSessionToken := uuid.NewString()
 	expiresAt := time.Now().Add(120 * time.Second)
 
-	sessions[newSessionToken] = session{
+	sessions[newSessionToken] = Session{
 		username: userSession.username,
 		expiry:   expiresAt,
 	}

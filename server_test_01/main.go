@@ -15,7 +15,7 @@ func main() {
 	})
 */
 
-	http.HandleFunc("/signin", Signin)
+	http.HandleFunc("/login", Signin)
 	http.HandleFunc("/welcome", Welcome)
 	http.HandleFunc("/refresh", Refresh)
 	http.HandleFunc("/logout", Logout)
