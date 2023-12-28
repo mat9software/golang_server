@@ -34,8 +34,8 @@ type Credentials struct {
 	Username string `json:"username"`
 }
 
-func Signin(w http.ResponseWriter, r *http.Request) {
-	log.Print("DEBUG:Signin")
+func Login(w http.ResponseWriter, r *http.Request) {
+	log.Print("DEBUG:Login")
 
 	var creds Credentials
 	err := json.NewDecoder(r.Body).Decode(&creds)
@@ -66,10 +66,6 @@ func Signin(w http.ResponseWriter, r *http.Request) {
   HttpOnly: true,
   Path : "/",
 	})
-
-//mdtmp remove
- w.Write([]byte("cookie set"))
-
 }
 
 func Welcome(w http.ResponseWriter, r *http.Request) {

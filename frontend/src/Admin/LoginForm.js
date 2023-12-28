@@ -1,21 +1,38 @@
 import '../App.css';
 
-async function handleLogin(e) {
-    e.preventDefault();
+async function handleSubmit(e, handleLogin) {
+    e.preventDefault()
 
-    const form = e.target;
-    const formData = new FormData(form);
+    const form = e.target
+    const formData = new FormData(form)
+    const formJson = Object.fromEntries(formData.entries())
 
-    //mdtmp fetch('/some-api', { method: form.method, body: formData });
+    try {
+        const fetchData = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formJson),
+        }
 
-    const formJson = Object.fromEntries(formData.entries());
-    console.log(formJson);
+        const response = await fetch('/api/login', fetchData)
+        if(response.status === 200) {
+          handleLogin(true)
+          return
+        }
+        //const ret = await response.json()
+        //console.log(ret)
+    } catch (e) {
+        console.error(e)
+    }
+    handleLogin(false)
 }
 
-function LoginForm() {
+function LoginForm(props) {
 return (
  <>
-    <form  onSubmit={handleLogin}>
+    <form onSubmit={(e) => handleSubmit(e, props.handleLogin)}>
       <label>
         Username: <input name="username" />
       </label>

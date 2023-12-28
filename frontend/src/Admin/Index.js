@@ -2,25 +2,29 @@ import '../App.css';
 
 import ActionForm from './ActionForm';
 import LoginForm from './LoginForm';
+import WelcomeForm from './WelcomeForm';
 
 import { useState } from 'react';
 
 //--------------------------------------------------
 
-const E_LOADING = 0;
+const E_WELCOME = 0;
 const E_LOGIN = 1;
 const E_ACTION = 2;
 
-function Loading() {
-  return (
-    <div>Loading</div>
-  )
-}
-
 function Admin() {
-  //const [pageStatus, setPageStatus] = useState(E_LOADING);
-  //const [pageStatus, setPageStatus] = useState(E_LOGIN);
-  const [pageStatus, setPageStatus] = useState(E_ACTION);
+  const [pageStatus, setPageStatus] = useState(E_WELCOME);
+
+  const handleWelcome = (success) => {
+    if(success)
+      setPageStatus(E_ACTION)
+    else
+      setPageStatus(E_LOGIN)
+  }
+  const handleLogin = (success) => {
+    if(success)
+      setPageStatus(E_ACTION)
+  }
 
   return (
     <div className="App">
@@ -29,11 +33,11 @@ function Admin() {
           Business-Quebec
         </p>
 
-        {pageStatus === E_LOADING &&
-         <Loading/>
+        {pageStatus === E_WELCOME &&
+         <WelcomeForm handleWelcome={handleWelcome}/>
         }
         {pageStatus === E_LOGIN &&
-         <LoginForm/>
+         <LoginForm handleLogin={handleLogin}/>
         }
         {pageStatus === E_ACTION &&
          <ActionForm/>
