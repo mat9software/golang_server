@@ -11,9 +11,22 @@ import (
 )
 
 // --------------------------
-var users = map[string]string{
-	"user1": "password1",
-	"user2": "password2",
+type UserInfo struct {
+	username string
+	password string
+	role string
+}
+var USERS = map[string]UserInfo{
+	"user1": UserInfo{
+   username: "user1",
+   password: "password1",
+   role:     "admin",
+ },
+	"user2": UserInfo{
+   username: "user2",
+   password: "password2",
+   role:     "member",
+ },
 }
 
 // --------------------------
@@ -34,6 +47,7 @@ type Credentials struct {
 	Username string `json:"username"`
 }
 
+// --------------------------
 func Login(w http.ResponseWriter, r *http.Request) {
 	log.Print("DEBUG:Login")
 
@@ -44,9 +58,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	expectedPassword, ok := users[creds.Username]
+	userInfo, ok := USERS[creds.Username]
 
-	if !ok || expectedPassword != creds.Password {
+	if !ok || userInfo.password != creds.Password {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
@@ -68,6 +82,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// --------------------------
 func Welcome(w http.ResponseWriter, r *http.Request) {
 	log.Print("DEBUG:Welcome")
 
@@ -96,6 +111,7 @@ func Welcome(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(fmt.Sprintf("Welcome %s!", userSession.username)))
 }
 
+// --------------------------
 func Refresh(w http.ResponseWriter, r *http.Request) {
 	log.Print("DEBUG:Refresh")
 
@@ -138,6 +154,7 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// --------------------------
 func Logout(w http.ResponseWriter, r *http.Request) {
 	log.Print("DEBUG:Logout")
 

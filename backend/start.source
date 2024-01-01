@@ -1,2 +1,2 @@
-cd /srv/server_test_01
+cd /srv/backend
 go run main

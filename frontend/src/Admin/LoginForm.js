@@ -1,5 +1,7 @@
 import '../App.css';
 
+import { useState } from "react"
+
 async function handleSubmit(e, handleLogin) {
     e.preventDefault()
 
@@ -30,17 +32,27 @@ async function handleSubmit(e, handleLogin) {
 }
 
 function LoginForm(props) {
+const [showFailedLogin, setShowFailedLogin] = useState(false)
+
+const handleLogin = (success) => {
+  props.handleLogin(success)// Propagate result
+  setShowFailedLogin(!success)// Display error if necessary
+}
+
 return (
  <>
-    <form onSubmit={(e) => handleSubmit(e, props.handleLogin)}>
+    <form onSubmit={(e) => handleSubmit(e, handleLogin)}>
       <label>
         Username: <input name="username" />
       </label>
       <hr />
       <label>
-        Password: <input name="password" />
+        Password: <input type="password" name="password" />
       </label>
       <hr />
+      { showFailedLogin &&
+        <div style={{ color:"red" }} >Login Failed.</div>
+      }
       <button type="submit">Submit</button>
     </form>
  </>
