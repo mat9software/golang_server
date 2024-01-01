@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
@@ -11,46 +10,28 @@ import (
 )
 
 // --------------------------
-type UserInfo struct {
-	username string
-	password string
-	role string
-}
-var USERS = map[string]UserInfo{
-	"user1": UserInfo{
-   username: "user1",
-   password: "password1",
-   role:     "admin",
- },
-	"user2": UserInfo{
-   username: "user2",
-   password: "password2",
-   role:     "member",
- },
-}
-
-// --------------------------
-type Session struct {
-	username string
-	expiry   time.Time
-}
-
-var sessions = map[string]Session{}
-
-func (s Session) isExpired() bool {
-	return s.expiry.Before(time.Now())
-}
-
-// --------------------------
 type Credentials struct {
 	Password string `json:"password"`
 	Username string `json:"username"`
 }
+// --------------------------
+// Parse session token from Cookie and populate http error code if applicable
+func ParseSession(w *http.ResponseWriter, r *http.Request) (string, error) {
+	c, err := r.Cookie("session_token")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			(*w).WriteHeader(http.StatusUnauthorized)
+			return "", err
+		}
+		(*w).WriteHeader(http.StatusBadRequest)
+		return "", err
+	}
+	sessionToken := c.Value
+ return sessionToken, nil
+}
 
 // --------------------------
 func Login(w http.ResponseWriter, r *http.Request) {
-	log.Print("DEBUG:Login")
-
 	var creds Credentials
 	err := json.NewDecoder(r.Body).Decode(&creds)
 	if err != nil {
@@ -68,7 +49,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	sessionToken := uuid.NewString()
 	expiresAt := time.Now().Add(100 * time.Hour)
 
-	sessions[sessionToken] = Session{
+	SESSIONS[sessionToken] = Session{
 		username: creds.Username,
 		expiry:   expiresAt,
 	}
@@ -84,26 +65,18 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 // --------------------------
 func Welcome(w http.ResponseWriter, r *http.Request) {
-	log.Print("DEBUG:Welcome")
+ sessionToken, err := ParseSession(&w, r)
+ if err != nil {
+   return
+ }
 
-	c, err := r.Cookie("session_token")
-	if err != nil {
-		if err == http.ErrNoCookie {
-			w.WriteHeader(http.StatusUnauthorized)
-			return
-		}
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	sessionToken := c.Value
-
-	userSession, exists := sessions[sessionToken]
+	userSession, exists := SESSIONS[sessionToken]
 	if !exists {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 	if userSession.isExpired() {
-		delete(sessions, sessionToken)
+		delete(SESSIONS, sessionToken)
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
@@ -113,26 +86,18 @@ func Welcome(w http.ResponseWriter, r *http.Request) {
 
 // --------------------------
 func Refresh(w http.ResponseWriter, r *http.Request) {
-	log.Print("DEBUG:Refresh")
+ sessionToken, err := ParseSession(&w, r)
+ if err != nil {
+   return
+ }
 
-	c, err := r.Cookie("session_token")
-	if err != nil {
-		if err == http.ErrNoCookie {
-			w.WriteHeader(http.StatusUnauthorized)
-			return
-		}
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	sessionToken := c.Value
-
-	userSession, exists := sessions[sessionToken]
+	userSession, exists := SESSIONS[sessionToken]
 	if !exists {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 	if userSession.isExpired() {
-		delete(sessions, sessionToken)
+		delete(SESSIONS, sessionToken)
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
@@ -140,12 +105,12 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 	newSessionToken := uuid.NewString()
 	expiresAt := time.Now().Add(120 * time.Second)
 
-	sessions[newSessionToken] = Session{
+	SESSIONS[newSessionToken] = Session{
 		username: userSession.username,
 		expiry:   expiresAt,
 	}
 
-	delete(sessions, sessionToken)
+	delete(SESSIONS, sessionToken)
 
 	http.SetCookie(w, &http.Cookie{
 		Name:    "session_token",
@@ -156,20 +121,12 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 
 // --------------------------
 func Logout(w http.ResponseWriter, r *http.Request) {
-	log.Print("DEBUG:Logout")
+ sessionToken, err := ParseSession(&w, r)
+ if err != nil {
+   return
+ }
 
-	c, err := r.Cookie("session_token")
-	if err != nil {
-		if err == http.ErrNoCookie {
-			w.WriteHeader(http.StatusUnauthorized)
-			return
-		}
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	sessionToken := c.Value
-
-	delete(sessions, sessionToken)
+	delete(SESSIONS, sessionToken)
 
 	http.SetCookie(w, &http.Cookie{
 		Name:    "session_token",
