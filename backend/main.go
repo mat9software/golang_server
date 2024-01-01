@@ -14,10 +14,10 @@ func main() {
 		fmt.Fprintf(w, "Hi /")
 	})
 
-	http.HandleFunc("/login", Login)
-	http.HandleFunc("/welcome", Welcome)
-	http.HandleFunc("/refresh", Refresh)
-	http.HandleFunc("/logout", Logout)
+	http.HandleFunc("/login", SessionLogin)
+	http.HandleFunc("/welcome", SessionWelcome)
+	http.HandleFunc("/refresh", SessionRefresh)
+	http.HandleFunc("/logout", SessionLogout)
 
 	httpPort := os.Getenv("PORT")
 	if httpPort == "" {
