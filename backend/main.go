@@ -7,6 +7,7 @@ import (
 	"os"
 )
 
+// --------------------------------------------------
 func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -14,11 +15,13 @@ func main() {
 		fmt.Fprintf(w, "Hi /")
 	})
 
+// ----------
 	http.HandleFunc("/login", SessionLogin)
 	http.HandleFunc("/welcome", SessionWelcome)
 	http.HandleFunc("/refresh", SessionRefresh)
 	http.HandleFunc("/logout", SessionLogout)
 
+// ----------
 	httpPort := os.Getenv("PORT")
 	if httpPort == "" {
 		httpPort = "8080"

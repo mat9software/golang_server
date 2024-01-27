@@ -9,13 +9,13 @@ import (
 	"github.com/google/uuid"
 )
 
-// --------------------------
+// --------------------------------------------------
 type Credentials struct {
 	Password string `json:"password"`
 	Username string `json:"username"`
 }
 
-// --------------------------
+// --------------------------------------------------
 func SessionLogin(w http.ResponseWriter, r *http.Request) {
 	var creds Credentials
 	err := json.NewDecoder(r.Body).Decode(&creds)
@@ -24,12 +24,10 @@ func SessionLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userInfo, ok := UsersGetInfo(creds.Username)
-
-	if !ok || userInfo.password != creds.Password {
+ if !UsersValidatePassword(creds.Username, creds.Password) {
 		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
+  return
+ }
 
 	newSessionToken := uuid.NewString()
 	expiresAt := time.Now().Add(100 * time.Hour)
@@ -49,7 +47,7 @@ func SessionLogin(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// --------------------------
+// --------------------------------------------------
 func SessionWelcome(w http.ResponseWriter, r *http.Request) {
  userSession, err := SessionParseValidate(&w, r)
  if err != nil {
@@ -59,7 +57,7 @@ func SessionWelcome(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(fmt.Sprintf("Welcome %s!", userSession.username)))
 }
 
-// --------------------------
+// --------------------------------------------------
 func SessionRefresh(w http.ResponseWriter, r *http.Request) {
  userSession, err := SessionParseValidate(&w, r)
  if err != nil {
@@ -84,7 +82,7 @@ func SessionRefresh(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// --------------------------
+// --------------------------------------------------
 func SessionLogout(w http.ResponseWriter, r *http.Request) {
  sessionToken, err := SessionParseToken(&w, r)
  if err != nil {
