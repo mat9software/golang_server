@@ -6,5 +6,6 @@ import (
 )
 
 // --------------------------------------------------
-func UsersGetUsersAndRoles(w http.ResponseWriter, r *http.Request) {
+func UsersGetAllUsersAndRoles(w http.ResponseWriter, r *http.Request) {
+//todo UsersValidateRole
 }

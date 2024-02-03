@@ -10,23 +10,8 @@ import (
 )
 
 // --------------------------------------------------
-
-func SessionHandlersInit() {
-	http.HandleFunc("/login", SessionLogin)
-	http.HandleFunc("/welcome", SessionWelcome)
-	http.HandleFunc("/refresh", SessionRefresh)
-	http.HandleFunc("/logout", SessionLogout)
-}
-
-// --------------------------------------------------
-type Credentials struct {
-	Password string `json:"password"`
-	Username string `json:"username"`
-}
-
-// --------------------------------------------------
 func SessionLogin(w http.ResponseWriter, r *http.Request) {
-	var creds Credentials
+	var creds SessionCredentials
 	err := json.NewDecoder(r.Body).Decode(&creds)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
