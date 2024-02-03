@@ -10,6 +10,15 @@ import (
 )
 
 // --------------------------------------------------
+
+func SessionHandlersInit() {
+	http.HandleFunc("/login", SessionLogin)
+	http.HandleFunc("/welcome", SessionWelcome)
+	http.HandleFunc("/refresh", SessionRefresh)
+	http.HandleFunc("/logout", SessionLogout)
+}
+
+// --------------------------------------------------
 type Credentials struct {
 	Password string `json:"password"`
 	Username string `json:"username"`

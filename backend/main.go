@@ -16,10 +16,7 @@ func main() {
 	})
 
 // ----------
-	http.HandleFunc("/login", SessionLogin)
-	http.HandleFunc("/welcome", SessionWelcome)
-	http.HandleFunc("/refresh", SessionRefresh)
-	http.HandleFunc("/logout", SessionLogout)
+ SessionHandlersInit()
 
 // ----------
 	httpPort := os.Getenv("PORT")
