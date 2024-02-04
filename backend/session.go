@@ -11,6 +11,7 @@ import (
 var(
 SessionNotFoundErr = errors.New("Session not found")
 SessionExpiredErr = errors.New("Session expired")
+SessionInsufficientRole = errors.New("Insufficient Role")
 )
 
 // --------------------------------------------------
@@ -51,6 +52,22 @@ func SessionParseValidate(w *http.ResponseWriter, r *http.Request)(Session, erro
 
  return userSession, err
 }
+
+func SessionParseValidateRole(w *http.ResponseWriter, r *http.Request, minimumRole UserRole)(error) {
+ userSession, err := SessionParseValidate(w, r)
+ if err != nil {
+   return err
+ }
+ 
+ ok := UsersValidateRole(userSession.username, minimumRole)
+ if !ok {
+			(*w).WriteHeader(http.StatusUnauthorized)
+   return SessionInsufficientRole
+ }
+
+ return nil
+}
+
 
 // --------------------------------------------------
 // Parse session token from Cookie and populate http error code if applicable

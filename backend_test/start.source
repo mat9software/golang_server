@@ -1,0 +1,2 @@
+cd /srv/backend_test
+go run test

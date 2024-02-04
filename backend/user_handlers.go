@@ -7,5 +7,10 @@ import (
 
 // --------------------------------------------------
 func UsersGetAllUsersAndRoles(w http.ResponseWriter, r *http.Request) {
-//todo UsersValidateRole
+ err := SessionParseValidateRole(&w, r, USER_ROLE_ADMIN)
+ if err != nil {
+   return
+ }
+
+//todo
 }
