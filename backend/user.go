@@ -41,3 +41,17 @@ func UsersValidateRole(username string, minimumRole UserRole) (bool) {
  return true
 }
 
+// --------------------------------------------------
+func UsersGetAllProtected() ([]UserInfoProtected) {
+  size := len(USERS)
+  allUsers := make([]UserInfoProtected, size)
+
+  i := 0
+  for _, v := range USERS {
+    allUsers[i] = UserInfoProtected{username:v.username, role:v.role}
+    i++
+  }
+
+  return allUsers;
+}
+

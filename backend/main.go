@@ -17,6 +17,7 @@ func main() {
 
 // ----------
  SessionHandlersInit()
+ UserHandlersInit()
 
 // ----------
 	httpPort := os.Getenv("PORT")
