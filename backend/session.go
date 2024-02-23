@@ -61,7 +61,7 @@ func SessionParseValidateRole(w *http.ResponseWriter, r *http.Request, minimumRo
  
  ok := UsersValidateRole(userSession.username, minimumRole)
  if !ok {
-			(*w).WriteHeader(http.StatusUnauthorized)
+			(*w).WriteHeader(http.StatusForbidden)
    return SessionInsufficientRole
  }
 

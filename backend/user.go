@@ -48,7 +48,7 @@ func UsersGetAllProtected() ([]UserInfoProtected) {
 
   i := 0
   for _, v := range USERS {
-    allUsers[i] = UserInfoProtected{username:v.username, role:v.role}
+    allUsers[i] = UserInfoProtected{Username:v.username, UserRole:v.role}
     i++
   }
 

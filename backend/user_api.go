@@ -29,8 +29,8 @@ type UserInfo struct {
 
 // --------------------------------------------------
 type UserInfoProtected struct {
-	username string
-	role UserRole
+	Username string `json:"username"`
+	UserRole UserRole   `json:"role"`
 }
 
 
