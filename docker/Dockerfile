@@ -49,6 +49,6 @@ RUN . $HOME/.nvm/nvm.sh && nvm install $NODE_VERSION
 #RUN git config --global user.name ""
 #RUN git config --global user.email ""
 
-COPY nginx.conf /etc/nginx/sites-available/default
+COPY nginx.conf  /etc/nginx/sites-available/default
 
 ENTRYPOINT service nginx restart && bash
