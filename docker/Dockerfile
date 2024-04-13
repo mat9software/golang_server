@@ -22,6 +22,10 @@ RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 
 WORKDIR /srv
 
+RUN apt-get install -y software-properties-common
+RUN add-apt-repository ppa:jonathonf/vim
+RUN apt update
+
 RUN apt install -y cmake tmux
 
 RUN apt install -y clang-format locate universal-ctags
@@ -45,9 +49,7 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | /
 ENV NVM_DIR=/root/.nvm
 ENV NODE_VERSION=v16.14.0
 RUN . $HOME/.nvm/nvm.sh && nvm install $NODE_VERSION
-
-#RUN git config --global user.name ""
-#RUN git config --global user.email ""
+RUN git clone https://github.com/github/copilot.vim.git /root/.vim/pack/github/start/copilot.vim
 
 COPY nginx.conf  /etc/nginx/sites-available/default
 

@@ -11,6 +11,9 @@
 # production
 /build
 
+# transient folder for local dev setup
+/transient
+
 # misc
 .DS_Store
 .env.local
